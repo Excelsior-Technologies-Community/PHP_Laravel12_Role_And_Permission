@@ -69,6 +69,8 @@ Run the migration:
 
 bash
 php artisan migrate
+
+
 Step 6: Update Models
 Update app/Models/User.php:
 
@@ -147,6 +149,8 @@ class Product extends Model
         'name', 'detail'
     ];
 }
+
+
 Step 7: Configure Middleware
 Update bootstrap/app.php:
 
@@ -179,6 +183,8 @@ composer require laravel/ui
 php artisan ui bootstrap --auth
 npm install
 npm run build
+
+
 Step 9: Create Controllers
 Create User Controller:
 
@@ -307,6 +313,8 @@ class UserController extends Controller
                         ->with('success','User deleted successfully');
     }
 }
+
+
 Create Role Controller:
 
 bash
@@ -443,6 +451,8 @@ class RoleController extends Controller
                         ->with('success','Role deleted successfully');
     }
 }
+
+
 Create Product Controller:
 
 bash
@@ -550,6 +560,9 @@ class ProductController extends Controller
                         ->with('success','Product deleted successfully');
     }
 }
+
+
+
 Update Home Controller (if needed):
 
 bash
@@ -581,7 +594,11 @@ class HomeController extends Controller
         return view('home');
     }
 }
+
+
 Step 10: Update Routes
+
+
 Update routes/web.php:
 
 php
