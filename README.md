@@ -1,4 +1,4 @@
-# Laravel 12 – Roles & Permissions (Spatie)
+# Laravel 12 – Roles & Permissions
 
 This project is a Laravel 12 application that implements **Role-Based Access Control (RBAC)** using the **Spatie Laravel Permission** package. It includes full CRUD for **Users, Roles, and Products** with permissions.
 
