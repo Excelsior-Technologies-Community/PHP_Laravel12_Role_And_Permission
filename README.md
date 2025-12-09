@@ -4,7 +4,7 @@ This project is a Laravel 12 application that implements **Role-Based Access Con
 
 ---
 
-## 🚀 Features
+## Features
 
 - Laravel 12
 - Spatie Roles & Permissions
@@ -15,7 +15,7 @@ This project is a Laravel 12 application that implements **Role-Based Access Con
 - Permission-based Access Control
 
 ---
-📸 Project Screenshots
+# Project Screenshots
 
 <img width="1739" height="585" alt="image" src="https://github.com/user-attachments/assets/3d71bc9d-7ca3-4f09-994c-a6d3ca6c541a" />
 <img width="1779" height="649" alt="image" src="https://github.com/user-attachments/assets/db96241b-8df1-42c3-9a2f-efd5f37592dd" />
@@ -23,7 +23,7 @@ This project is a Laravel 12 application that implements **Role-Based Access Con
 <img width="1701" height="461" alt="image" src="https://github.com/user-attachments/assets/492be21b-50df-402d-a439-730ff0cd49bb" />
 
 
-## 📦 Installation
+## Installation
 
 Clone the repository:
 
@@ -47,7 +47,7 @@ Generate application key:
 
 php artisan key:generate
 
-⚙️ Environment Configuration
+Environment Configuration
 
 Update your .env file with database credentials:
 DB_CONNECTION=mysql
@@ -57,7 +57,7 @@ DB_DATABASE=roles_permissions
 DB_USERNAME=root
 DB_PASSWORD=
 
-🛠️ Setup Steps
+Setup Steps
 
 Install Spatie Permission package:
 
@@ -76,7 +76,7 @@ composer require laravel/ui
 php artisan ui bootstrap --auth
 npm run build
 
-🌱 Database Seeding
+Database Seeding
 
 Run these seeders to create roles, permissions, and admin user:
 
@@ -87,7 +87,7 @@ Default Admin Login
 Email: admin@gmail.com
 Password: 123456
 
-▶️ Run the Application
+Run the Application
 php artisan serve
 
 
@@ -95,7 +95,8 @@ Open in browser:
 
 http://localhost:8000
 
-📁 Project Structure
+Project Structure
+
 app/
  ├── Http/Controllers/
  │   ├── UserController.php
