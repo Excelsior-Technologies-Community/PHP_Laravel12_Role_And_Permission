@@ -1,36 +1,43 @@
 <?php
-    
+
 namespace App\Http\Controllers;
-    
+
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-    
+use App\Models\ActivityLog;
+
 class ProductController extends Controller
-{ 
+{
     /**
      * Display a listing of the resource.
      */
     function __construct()
     {
-         $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:product-create', ['only' => ['create','store']]);
-         $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:product-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:product-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:product-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:product-delete', ['only' => ['destroy']]);
     }
-    
+
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $products = Product::latest()->paginate(5);
+        $products = Product::when($request->search, function ($query) use ($request) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('detail', 'LIKE', '%' . $request->search . '%');
+        })
+            ->orderBy('id', 'asc')
+            ->paginate(3)
+            ->withQueryString();
 
-        return view('products.index',compact('products'))
+        return view('products.index', compact('products'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -38,7 +45,7 @@ class ProductController extends Controller
     {
         return view('products.create');
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -48,53 +55,85 @@ class ProductController extends Controller
             'name' => 'required',
             'detail' => 'required',
         ]);
-    
-        Product::create($request->all());
-    
+
+        $product = Product::create($request->all());
+
+
+        ActivityLog::create([
+
+            'user_id' => auth()->id(),
+
+            'action' => 'Created Product',
+
+            'module' => $product->name
+
+        ]);
+
         return redirect()->route('products.index')
-                        ->with('success','Product created successfully.');
+            ->with('success', 'Product created successfully.');
     }
-    
+
     /**
      * Display the specified resource.
      */
     public function show(Product $product): View
     {
-        return view('products.show',compact('product'));
+        return view('products.show', compact('product'));
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Product $product): View
     {
-        return view('products.edit',compact('product'));
+        return view('products.edit', compact('product'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Product $product): RedirectResponse
     {
-         request()->validate([
+        request()->validate([
             'name' => 'required',
             'detail' => 'required',
         ]);
-    
+
         $product->update($request->all());
-    
+
+
+        ActivityLog::create([
+
+            'user_id' => auth()->id(),
+
+            'action' => 'Updated Product',
+
+            'module' => $product->name
+
+        ]);
+
         return redirect()->route('products.index')
-                        ->with('success','Product updated successfully');
+            ->with('success', 'Product updated successfully');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Product $product): RedirectResponse
     {
+        ActivityLog::create([
+
+            'user_id' => auth()->id(),
+
+            'action' => 'Deleted Product',
+
+            'module' => $product->name
+
+        ]);
+
         $product->delete();
-    
+
         return redirect()->route('products.index')
-                        ->with('success','Product deleted successfully');
+            ->with('success', 'Product deleted successfully');
     }
 }
