@@ -75,9 +75,20 @@ class UserController extends Controller
      */
     public function show($id): View
     {
-        $user = User::find($id);
+        $user = User::with('roles.permissions')->findOrFail($id);
 
-        return view('users.show', compact('user'));
+        $permissions = $user->roles
+            ->flatMap(function ($role) {
+                return $role->permissions;
+            })
+            ->unique('id')
+            ->sortBy('name')
+            ->values();
+
+        return view(
+            'users.show',
+            compact('user', 'permissions')
+        );
     }
 
     /**

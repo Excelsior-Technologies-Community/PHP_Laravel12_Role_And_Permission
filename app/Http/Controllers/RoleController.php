@@ -172,4 +172,22 @@ class RoleController extends Controller
         return redirect()->route('roles.index')
             ->with('success', 'Role deleted successfully');
     }
+
+    /**
+     * Display role permission matrix.
+     */
+    public function permissionMatrix()
+    {
+        $roles = Role::with('permissions')
+            ->orderBy('name')
+            ->get();
+
+        $permissions = Permission::orderBy('name')
+            ->get();
+
+        return view('roles.permission-matrix', compact(
+            'roles',
+            'permissions'
+        ));
+    }
 }

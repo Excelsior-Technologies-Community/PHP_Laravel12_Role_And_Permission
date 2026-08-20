@@ -53,8 +53,23 @@
                         </li>
                         @endif
                         @else
+                        <li>
+                            <a class="nav-link" href="{{ route('dashboard') }}">
+                                Dashboard
+                            </a>
+                        </li>
                         <li><a class="nav-link" href="{{ route('users.index') }}">Manage Users</a></li>
-                        <li><a class="nav-link" href="{{ route('roles.index') }}">Manage Role</a></li>
+                        <li>
+                            <a class="nav-link" href="{{ route('roles.index') }}">
+                                Manage Role
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="nav-link" href="{{ route('roles.permission-matrix') }}">
+                                Permission Matrix
+                            </a>
+                        </li>
                         <li><a class="nav-link" href="{{ route('products.index') }}">Manage Product</a></li>
                         <li><a class="nav-link" href="{{ route('activity-logs.index') }}">Activity Logs</a></li>
                         <li class="nav-item dropdown">
