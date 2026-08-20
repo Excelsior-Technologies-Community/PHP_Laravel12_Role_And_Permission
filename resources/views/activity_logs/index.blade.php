@@ -1,89 +1,173 @@
 @extends('layouts.app')
 
-
 @section('content')
 
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-<div class="row mb-3">
+    <div>
+        <h2>Activity Logs</h2>
 
-    <div class="col-lg-12">
+        <p class="text-muted mb-0">
+            Monitor user, role and product activities.
+        </p>
+    </div>
 
-        <h2>
-            Activity Logs
-        </h2>
+    <div>
+
+        <form
+            method="POST"
+            action="{{ route('activity-logs.clear') }}"
+            style="display:inline;"
+            onsubmit="return confirm('Are you sure you want to clear all activity logs?');">
+
+            @csrf
+
+            <button type="submit" class="btn btn-danger">
+                <i class="fa-solid fa-trash"></i>
+                Clear All Logs
+            </button>
+
+        </form>
 
     </div>
 
 </div>
 
 
-<table class="table table-bordered">
+@if(session('success'))
+
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+
+@endif
 
 
-    <tr>
+<div class="table-responsive">
 
-        <th>No</th>
+    <table class="table table-bordered table-hover">
 
-        <th>User</th>
+        <thead class="table-dark">
 
-        <th>Action</th>
+            <tr>
 
-        <th>Module</th>
+                <th>No</th>
 
-        <th>Date</th>
+                <th>User</th>
 
-    </tr>
+                <th>Action</th>
+
+                <th>Module</th>
+
+                <th>Date</th>
+
+                <th width="220px">Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @forelse($logs as $log)
+
+            <tr>
+
+                <td>
+                    {{ ($logs->currentPage() - 1) * $logs->perPage() + $loop->iteration }}
+                </td>
+
+                <td>
+
+                    @if($log->user)
+
+                    {{ $log->user->name }}
+
+                    @else
+
+                    <span class="text-muted">
+                        Deleted User
+                    </span>
+
+                    @endif
+
+                </td>
+
+                <td>
+                    <span class="badge bg-primary">
+                        {{ $log->action }}
+                    </span>
+                </td>
+
+                <td>
+                    {{ $log->module }}
+                </td>
+
+                <td>
+                    {{ $log->created_at->format('d-m-Y H:i') }}
+                </td>
+
+                <td>
+
+                    <a
+                        href="{{ route('activity-logs.show', $log->id) }}"
+                        class="btn btn-info btn-sm">
+                        <i class="fa-solid fa-eye"></i>
+                        View
+                    </a>
 
 
+                    <form
+                        method="POST"
+                        action="{{ route('activity-logs.destroy', $log->id) }}"
+                        style="display:inline;"
+                        onsubmit="return confirm('Delete this activity log?');">
 
-    @foreach($logs as $log)
+                        @csrf
+                        @method('DELETE')
 
+                        <button
+                            type="submit"
+                            class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i>
+                            Delete
+                        </button>
 
-    <tr>
+                    </form>
 
+                </td>
 
-        <td>
-            {{ $loop->iteration }}
-        </td>
+            </tr>
 
+            @empty
 
-        <td>
-            {{ $log->user->name }}
-        </td>
+            <tr>
 
+                <td colspan="6" class="text-center py-4">
 
-        <td>
-            {{ $log->action }}
-        </td>
+                    <i class="fa-solid fa-clock-rotate-left fa-2x text-muted"></i>
 
+                    <p class="mt-2 mb-0">
+                        No activity logs found.
+                    </p>
 
-        <td>
-            {{ $log->module }}
-        </td>
+                </td>
 
+            </tr>
 
-        <td>
-            {{ $log->created_at->format('d-m-Y H:i') }}
-        </td>
+            @endforelse
 
+        </tbody>
 
-
-    </tr>
-
-
-    @endforeach
-
-
-</table>
-
-
-
-<div class="d-flex justify-content-center">
-
-    {{ $logs->links() }}
+    </table>
 
 </div>
 
 
+<div class="d-flex justify-content-center">
+
+    {{ $logs->links('pagination::bootstrap-5') }}
+
+</div>
 
 @endsection
