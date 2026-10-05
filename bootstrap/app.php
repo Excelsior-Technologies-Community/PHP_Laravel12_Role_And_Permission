@@ -18,5 +18,18 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->renderable(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
+            if (auth()->check()) {
+                \App\Models\AccessViolationLog::create([
+                    'user_id' => auth()->id(),
+                    'user_email' => auth()->user()->email,
+                    'attempted_url' => $request->fullUrl(),
+                    'route_name' => $request->route() ? $request->route()->getName() : null,
+                    'required_permission' => implode(', ', $e->getRequiredPermissions()),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->header('User-Agent'),
+                    'status' => 'flagged',
+                ]);
+            }
+        });
     })->create();
